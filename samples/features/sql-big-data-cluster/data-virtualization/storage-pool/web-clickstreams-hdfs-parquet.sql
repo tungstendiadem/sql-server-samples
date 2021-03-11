@@ -1,6 +1,12 @@
 USE sales
 GO
 
+-- Create external data source for HDFS inside SQL big data cluster.
+--
+IF NOT EXISTS(SELECT * FROM sys.external_data_sources WHERE name = 'SqlStoragePool')
+    CREATE EXTERNAL DATA SOURCE SqlStoragePool
+    WITH (LOCATION = 'sqlhdfs://controller-svc/default');
+
 -- Create file format for parquet file with appropriate properties.
 --
 IF NOT EXISTS(SELECT * FROM sys.external_file_formats WHERE name = 'parquet_file')
@@ -84,8 +90,8 @@ AS
 						 AND w.wcs_user_sk IS NOT NULL)
 	  GROUP BY w.wcs_user_sk
 	) AS q
-	INNER JOIN customer as c ON q.wcs_user_sk = c.c_customer_sk
-	INNER JOIN customer_demographics as cd ON c.c_current_cdemo_sk = cd.cd_demo_sk;
+	INNER JOIN customer_ora as c ON q.wcs_user_sk = c.C_CUSTOMER_SK
+	INNER JOIN customer_demographics as cd ON c.C_CURRENT_CDEMO_SK = cd.cd_demo_sk;
 GO
 
 

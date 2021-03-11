@@ -22,23 +22,23 @@ IF NOT EXISTS(SELECT * FROM sys.external_data_sources WHERE name = 'OracleSalesS
 CREATE EXTERNAL TABLE [dbo].[customer_ora]
 (
     [C_CUSTOMER_SK] DECIMAL(10,0),
-    [C_CUSTOMER_ID] VARCHAR(16) COLLATE SQL_Latin1_General_CP1_CI_AS,
+    [C_CUSTOMER_ID] NVARCHAR(16) COLLATE Latin1_General_100_BIN2_UTF8,
     [C_CURRENT_CDEMO_SK] DECIMAL(10,0),
     [C_CURRENT_HDEMO_SK] DECIMAL(10,0),
     [C_CURRENT_ADDR_SK] DECIMAL(10,0),
     [C_FIRST_SHIPTO_DATE_SK] DECIMAL(10,0),
     [C_FIRST_SALES_DATE_SK] DECIMAL(8,0),
-    [C_SALUTATION] VARCHAR(10) COLLATE SQL_Latin1_General_CP1_CI_AS,
-    [C_FIRST_NAME] VARCHAR(20) COLLATE SQL_Latin1_General_CP1_CI_AS,
-    [C_LAST_NAME] VARCHAR(30) COLLATE SQL_Latin1_General_CP1_CI_AS,
-    [C_PREFERRED_CUST_FLAG] VARCHAR COLLATE SQL_Latin1_General_CP1_CI_AS,
+    [C_SALUTATION] NVARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,
+    [C_FIRST_NAME] NVARCHAR(20) COLLATE Latin1_General_100_BIN2_UTF8,
+    [C_LAST_NAME] NVARCHAR(30) COLLATE Latin1_General_100_BIN2_UTF8,
+    [C_PREFERRED_CUST_FLAG] NVARCHAR COLLATE Latin1_General_100_BIN2_UTF8,
     [C_BIRTH_DAY] DECIMAL(8,0),
     [C_BIRTH_MONTH] DECIMAL(8,0),
     [C_BIRTH_YEAR] DECIMAL(8,0),
-    [C_BIRTH_COUNTRY] VARCHAR(20) COLLATE SQL_Latin1_General_CP1_CI_AS,
-    [C_LOGIN] VARCHAR(13) COLLATE SQL_Latin1_General_CP1_CI_AS,
-    [C_EMAIL_ADDRESS] VARCHAR(50) COLLATE SQL_Latin1_General_CP1_CI_AS,
-    [C_LAST_REVIEW_DATE] VARCHAR(20) COLLATE SQL_Latin1_General_CP1_CI_AS
+    [C_BIRTH_COUNTRY] NVARCHAR(20) COLLATE Latin1_General_100_BIN2_UTF8,
+    [C_LOGIN] NVARCHAR(13) COLLATE Latin1_General_100_BIN2_UTF8,
+    [C_EMAIL_ADDRESS] NVARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,
+    [C_LAST_REVIEW_DATE] NVARCHAR(20) COLLATE Latin1_General_100_BIN2_UTF8
 )
 WITH (DATA_SOURCE=[OracleSalesSrvr],
       LOCATION='<oracle_service_name,nvarchar(30),xe>.SALES.CUSTOMER');
@@ -49,7 +49,7 @@ GO
 SELECT pr.pr_item_sk, pc.pr_review_content, pr.pr_user_sk AS customerid 
 FROM dbo.product_reviews as pr
 JOIN (SELECT TOP(100) * FROM dbo.product_reviews_hdfs_csv) AS pc ON pc.pr_review_sk = pr.pr_review_sk
-JOIN dbo.customer_ora AS c ON c.c_customer_sk = pr.pr_user_sk
+JOIN dbo.customer_ora AS c ON c.C_CUSTOMER_SK = pr.pr_user_sk
 JOIN dbo.item AS i ON i.i_item_sk = pr.pr_item_sk
 INNER JOIN (
     SELECT
